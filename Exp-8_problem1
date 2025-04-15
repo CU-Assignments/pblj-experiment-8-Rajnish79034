@@ -1,0 +1,69 @@
+This form will take input for username and password and submit it to the servlet.
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Form</title>
+</head>
+<body>
+    <h2>Login Form</h2>
+    <form action="LoginServlet" method="post">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username" required><br><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password" required><br><br>
+        <input type="submit" value="Login">
+    </form>
+</body>
+</html>
+
+This servlet will handle the form submission, validate the user credentials, and display the welcome message if the login is successful.
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/LoginServlet")
+public class LoginServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Retrieve parameters from the form
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        // Simulate authentication (replace with actual authentication logic)
+        boolean isAuthenticated = authenticate(username, password);
+
+        if (isAuthenticated) {
+            // Display personalized welcome message
+            String message = "Welcome, " + username + "!";
+            request.setAttribute("message", message);
+            request.getRequestDispatcher("/welcome.jsp").forward(request, response);
+        } else {
+            // Redirect back to login page with an error message
+            response.sendRedirect(request.getContextPath() + "/login.html?error=true");
+        }
+    }
+
+    private boolean authenticate(String username, String password) {
+        // Replace with actual authentication logic (database lookup, etc.)
+        // For simplicity, hardcoded authentication
+        return username.equals("user") && password.equals("password");
+    }
+}
+
+This JSP page will display the personalized welcome message.
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome</title>
+</head>
+<body>
+    <h2>Welcome Page</h2>
+    <p>${message}</p>
+</body>
+</html>
